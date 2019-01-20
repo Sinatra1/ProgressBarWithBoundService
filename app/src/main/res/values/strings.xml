@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ProjectWithBoundService</string>
+    <string name="start_service">Запустить сервис</string>
+</resources>
