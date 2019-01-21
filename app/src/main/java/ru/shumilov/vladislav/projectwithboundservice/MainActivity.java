@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         super.onStart();
 
         Intent intent = new Intent(MainActivity.this, ProgressService.class);
+        startService(intent);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
         mProgressBar.setVisibility(ProgressBar.GONE);

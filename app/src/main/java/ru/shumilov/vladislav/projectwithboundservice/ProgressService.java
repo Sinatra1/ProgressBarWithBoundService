@@ -18,8 +18,6 @@ public class ProgressService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        mCountPercentThread = new CountPercentThread();
     }
 
     @Nullable
@@ -30,7 +28,9 @@ public class ProgressService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        mCountPercentThread.quit();
+        if (mCountPercentThread != null) {
+            mCountPercentThread.quit();
+        }
 
         return super.onUnbind(intent);
     }
@@ -42,6 +42,8 @@ public class ProgressService extends Service {
     }
 
     public void startProgress() {
+        mCountPercentThread = new CountPercentThread();
+
         if (mCountPercentThread.isAlive()) {
             mCountPercentThread.countPercents();
             return;
