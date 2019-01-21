@@ -10,7 +10,7 @@ import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -19,17 +19,18 @@ public class MainActivity extends AppCompatActivity implements Observer {
     public ProgressService mProgressService;
     private boolean mBound = false;
     private Progress mProgress;
-    private TextView mPercentTextView;
-    private Button mStartServiceButton;
     private Handler mHandler = new Handler();
+
+    private Button mStartServiceButton;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPercentTextView = findViewById(R.id.tvPercentView);
         mStartServiceButton = findViewById(R.id.btnStartService);
+        mProgressBar = findViewById(R.id.progressBar);
     }
 
     @Override
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         Intent intent = new Intent(MainActivity.this, ProgressService.class);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+        mProgressBar.setVisibility(ProgressBar.GONE);
     }
 
     @Override
@@ -89,7 +92,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mPercentTextView.setText(mProgress.getPercent().toString());
+                if (mProgressBar.getVisibility() != View.VISIBLE) {
+                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                }
+
+                mProgressBar.setProgress(mProgress.getPercent());
             }
         });
     }
