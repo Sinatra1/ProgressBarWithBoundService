@@ -4,22 +4,31 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Observable;
+import java.util.Observer;
+
+public class MainActivity extends AppCompatActivity implements Observer {
     public ProgressService mProgressService;
     private boolean mBound = false;
+    private Progress mProgress;
+    private TextView mPercentTextView;
     private Button mStartServiceButton;
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mPercentTextView = findViewById(R.id.tvPercentView);
         mStartServiceButton = findViewById(R.id.btnStartService);
     }
 
@@ -37,21 +46,22 @@ public class MainActivity extends AppCompatActivity {
 
         mStartServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                int k = 0;
-                k = k + 1;
+            public void onClick(View v) {
+                if (mBound) {
+                    mProgressService.startProgress();
+                }
             }
         });
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
-
         if (mBound) {
-            mProgressService.unbindService(mServiceConnection);
+            unbindService(mServiceConnection);
             mBound = false;
         }
+
+        super.onStop();
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -59,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder service) {
             ProgressService.ProgressBinder binder = (ProgressService.ProgressBinder) service;
             mProgressService = binder.getService();
+            mProgress = mProgressService.getProgress();
+            mProgress.addObserver(MainActivity.this);
             mBound = true;
         }
 
@@ -67,4 +79,18 @@ public class MainActivity extends AppCompatActivity {
             mBound = false;
         }
     };
+
+    @Override
+    public void update(Observable observable, Object arg) {
+        if (!(observable instanceof Progress)) {
+            return;
+        }
+
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mPercentTextView.setText(mProgress.getPercent().toString());
+            }
+        });
+    }
 }

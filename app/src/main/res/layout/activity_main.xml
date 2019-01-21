@@ -7,7 +7,7 @@
     tools:context="ru.shumilov.vladislav.projectwithboundservice.MainActivity">
 
     <TextView
-        android:id="@+id/percentView"
+        android:id="@+id/tvPercentView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
@@ -23,6 +23,6 @@
         android:layout_marginBottom="8dp"
         android:text="@string/start_service"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@id/percentView"/>
+        app:layout_constraintTop_toTopOf="@id/tvPercentView"/>
 
 </android.support.constraint.ConstraintLayout>
