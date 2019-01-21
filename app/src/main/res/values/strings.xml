@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ProjectWithBoundService</string>
     <string name="start_service">Запустить сервис</string>
+    <string name="flush_progress">Сбросить прогресс на половину</string>
 </resources>

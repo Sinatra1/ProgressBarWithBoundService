@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     private Button mStartServiceButton;
     private ProgressBar mProgressBar;
+    private Button mFlushProgressBarButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         mStartServiceButton = findViewById(R.id.btnStartService);
         mProgressBar = findViewById(R.id.progressBar);
+        mFlushProgressBarButton = findViewById(R.id.btnFlushProgressBar);
     }
 
     @Override
@@ -53,6 +55,23 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 if (mBound) {
                     mProgressService.startProgress();
                 }
+            }
+        });
+
+        mFlushProgressBarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mBound) {
+                    return;
+                }
+
+                int flushPercent = 0;
+
+                if (mProgress.getPercent() > 50) {
+                    flushPercent = mProgress.getPercent() - 50;
+                }
+
+                mProgress.setPercent(flushPercent);
             }
         });
     }

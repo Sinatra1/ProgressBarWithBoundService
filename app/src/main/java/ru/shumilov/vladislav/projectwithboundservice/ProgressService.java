@@ -94,4 +94,8 @@ public class ProgressService extends Service {
     public Progress getProgress() {
         return mProgress;
     }
+
+    public void setProgress(Progress progress) {
+        mProgress = progress;
+    }
 }
